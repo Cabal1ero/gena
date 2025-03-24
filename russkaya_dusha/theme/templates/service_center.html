@@ -1,0 +1,257 @@
+{% extends 'base.html' %}
+
+{% block title %}Сервисный центр - Автосалон "Русская душа"{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-[1280px] mx-auto px-4 py-8">
+  <!-- Заголовок и основное изображение -->
+  <div class="mb-12">
+    <div class="relative rounded-xl overflow-hidden shadow-lg mb-8">
+      <img src="/static/img/service_centre.jpg" alt="Сервисный центр" class="w-full h-[400px] object-cover">
+      <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+        <div class="p-8 text-white">
+          <h2 class="text-3xl font-bold mb-2">Профессиональное обслуживание вашего автомобиля</h2>
+          <p class="text-xl">Доверьте свой автомобиль профессионалам</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Почему выбирают нас -->
+  <div class="mb-16">
+    <h2 class="text-3xl font-bold text-primary mb-10 text-center">Почему выбирают нас</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Преимущество 1 -->
+      <div class="bg-base-100 rounded-xl shadow-md p-6 text-center hover:shadow-xl transition-shadow">
+        <div class="flex justify-center mb-4">
+          <span class="icon-[tabler--coin] size-16 text-accent"></span>
+        </div>
+        <h3 class="text-xl font-bold mb-3">Самые выгодные цены</h3>
+        <p class="text-base-content/70">
+          Мы предлагаем конкурентоспособные цены на все виды работ и запчасти. Регулярные акции и специальные предложения помогут вам сэкономить.
+        </p>
+      </div>
+      
+      <!-- Преимущество 2 -->
+      <div class="bg-base-100 rounded-xl shadow-md p-6 text-center hover:shadow-xl transition-shadow">
+        <div class="flex justify-center mb-4">
+          <span class="icon-[tabler--tools] size-16 text-accent"></span>
+        </div>
+        <h3 class="text-xl font-bold mb-3">Качественные запчасти</h3>
+        <p class="text-base-content/70">
+          Мы используем только оригинальные запчасти и высококачественные аналоги от проверенных производителей, что гарантирует долговечность ремонта.
+        </p>
+      </div>
+      
+      <!-- Преимущество 3 -->
+      <div class="bg-base-100 rounded-xl shadow-md p-6 text-center hover:shadow-xl transition-shadow">
+        <div class="flex justify-center mb-4">
+          <span class="icon-[tabler--user-check] size-16 text-accent"></span>
+        </div>
+        <h3 class="text-xl font-bold mb-3">Профессиональные мастера</h3>
+        <p class="text-base-content/70">
+          Наши мастера имеют многолетний опыт работы и регулярно проходят обучение, чтобы быть в курсе последних технологий в автомобильной индустрии.
+        </p>
+      </div>
+      
+      <!-- Преимущество 4 -->
+      <div class="bg-base-100 rounded-xl shadow-md p-6 text-center hover:shadow-xl transition-shadow">
+        <div class="flex justify-center mb-4">
+          <span class="icon-[tabler--clock] size-16 text-accent"></span>
+        </div>
+        <h3 class="text-xl font-bold mb-3">Быстрый ремонт</h3>
+        <p class="text-base-content/70">
+          Мы ценим ваше время, поэтому стремимся выполнить все работы максимально быстро, не теряя в качестве. Большинство работ выполняется в день обращения.
+        </p>
+      </div>
+      
+      <!-- Преимущество 5 -->
+      <div class="bg-base-100 rounded-xl shadow-md p-6 text-center hover:shadow-xl transition-shadow">
+        <div class="flex justify-center mb-4">
+          <span class="icon-[tabler--shield-check] size-16 text-accent"></span>
+        </div>
+        <h3 class="text-xl font-bold mb-3">Гарантия на все виды работ</h3>
+        <p class="text-base-content/70">
+          Мы предоставляем гарантию на все выполненные работы и установленные запчасти. Вы можете быть уверены в качестве нашего сервиса.
+        </p>
+      </div>
+      
+      <!-- Преимущество 6 -->
+      <div class="bg-base-100 rounded-xl shadow-md p-6 text-center hover:shadow-xl transition-shadow">
+        <div class="flex justify-center mb-4">
+          <span class="icon-[tabler--coffee] size-16 text-accent"></span>
+        </div>
+        <h3 class="text-xl font-bold mb-3">Комфортная зона ожидания</h3>
+        <p class="text-base-content/70">
+          Пока ваш автомобиль обслуживается, вы можете отдохнуть в нашей комфортной зоне ожидания с бесплатным Wi-Fi, кофе и прохладительными напитками.
+        </p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Наши услуги -->
+  <div class="mb-16">
+    <h2 class="text-3xl font-bold text-primary mb-10 text-center">Наши услуги</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Услуга 1 -->
+      <div class="bg-base-100 rounded-xl shadow-md overflow-hidden flex flex-col md:flex-row">
+        <div class="md:w-1/3 bg-primary flex items-center justify-center p-6">
+          <span class="icon-[tabler--engine] size-16 text-white"></span>
+        </div>
+        <div class="md:w-2/3 p-6">
+          <h3 class="text-xl font-bold mb-2">Техническое обслуживание</h3>
+          <p class="text-base-content/70">
+            Регулярное ТО по регламенту производителя, замена масла, фильтров и других расходных материалов.
+          </p>
+        </div>
+      </div>
+      
+      <!-- Услуга 2 -->
+      <div class="bg-base-100 rounded-xl shadow-md overflow-hidden flex flex-col md:flex-row">
+        <div class="md:w-1/3 bg-primary flex items-center justify-center p-6">
+          <span class="icon-[tabler--car] size-16 text-white"></span>
+        </div>
+        <div class="md:w-2/3 p-6">
+          <h3 class="text-xl font-bold mb-2">Диагностика</h3>
+          <p class="text-base-content/70">
+            Компьютерная диагностика, проверка ходовой части, тормозной системы и других узлов автомобиля.
+          </p>
+        </div>
+      </div>
+      
+      <!-- Услуга 3 -->
+      <div class="bg-base-100 rounded-xl shadow-md overflow-hidden flex flex-col md:flex-row">
+        <div class="md:w-1/3 bg-primary flex items-center justify-center p-6">
+          <span class="icon-[tabler--tools] size-16 text-white"></span>
+        </div>
+        <div class="md:w-2/3 p-6">
+          <h3 class="text-xl font-bold mb-2">Ремонт двигателя</h3>
+          <p class="text-base-content/70">
+            Капитальный и текущий ремонт двигателей любой сложности с использованием качественных запчастей.
+          </p>
+        </div>
+      </div>
+      
+      <!-- Услуга 4 -->
+      <div class="bg-base-100 rounded-xl shadow-md overflow-hidden flex flex-col md:flex-row">
+        <div class="md:w-1/3 bg-primary flex items-center justify-center p-6">
+          <span class="icon-[tabler--manual-gearbox] size-16 text-white"></span>
+        </div>
+        <div class="md:w-2/3 p-6">
+          <h3 class="text-xl font-bold mb-2">Ремонт трансмиссии</h3>
+          <p class="text-base-content/70">
+            Диагностика и ремонт МКПП, АКПП, вариаторов и роботизированных коробок передач.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Форма для записи -->
+  <div class="bg-base-100 rounded-xl shadow-lg p-8 mb-12">
+    <h2 class="text-3xl font-bold text-primary mb-6 text-center">Запись на сервис</h2>
+    <p class="text-center text-base-content/70 mb-8">
+      Заполните форму ниже, и наш менеджер свяжется с вами для подтверждения записи
+    </p>
+    
+    <form action="{% url 'autosalon:service_center' %}" method="post" class="max-w-2xl mx-auto">
+      {% csrf_token %}
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="form-control">
+          <label class="label" for="name">
+            <span class="label-text font-medium">Ваше имя</span>
+          </label>
+          <input type="text" id="name" name="name" class="input input-bordered w-full" required>
+        </div>
+        
+        <div class="form-control">
+          <label class="label" for="phone">
+            <span class="label-text font-medium">Телефон</span>
+          </label>
+          <input type="tel" id="phone" name="phone" class="input input-bordered w-full" required>
+        </div>
+        
+        <div class="form-control">
+          <label class="label" for="car_model">
+            <span class="label-text font-medium">Марка и модель автомобиля</span>
+          </label>
+          <input type="text" id="car_model" name="car_model" class="input input-bordered w-full" required>
+        </div>
+        
+        <div class="form-control">
+          <label class="label" for="service_date">
+            <span class="label-text font-medium">Предпочтительная дата</span>
+          </label>
+          <input type="date" id="service_date" name="service_date" class="input input-bordered w-full" required>
+        </div>
+        
+        <div class="form-control md:col-span-2">
+          <label class="label" for="service_type">
+            <span class="label-text font-medium">Тип обслуживания</span>
+          </label>
+          <select id="service_type" name="service_type" class="select select-bordered w-full" required>
+            <option value="" disabled selected>Выберите тип обслуживания</option>
+            <option value="maintenance">Техническое обслуживание</option>
+            <option value="diagnostics">Диагностика</option>
+            <option value="engine_repair">Ремонт двигателя</option>
+            <option value="transmission_repair">Ремонт трансмиссии</option>
+            <option value="suspension_repair">Ремонт подвески</option>
+            <option value="brake_repair">Ремонт тормозной системы</option>
+            <option value="electrical_repair">Ремонт электрики</option>
+            <option value="other">Другое</option>
+          </select>
+        </div>
+        
+        <div class="form-control md:col-span-2">
+          <label class="label" for="comments">
+            <span class="label-text font-medium">Комментарии</span>
+          </label>
+          <textarea id="comments" name="comments" class="textarea textarea-bordered w-full h-32" placeholder="Опишите проблему или укажите дополнительную информацию"></textarea>
+        </div>
+      </div>
+      
+      <div class="form-control mb-6">
+        <label class="label cursor-pointer justify-start gap-2">
+          <input type="checkbox" name="agree_terms" class="checkbox checkbox-primary" required>
+          <span class="label-text">Я согласен на обработку персональных данных</span>
+        </label>
+      </div>
+      
+      <div class="flex justify-center">
+        <button type="submit" class="btn btn-primary btn-lg gap-2">
+          <span class="icon-[tabler--calendar-plus] size-5"></span>
+          Записаться на сервис
+        </button>
+      </div>
+    </form>
+  </div>
+  
+
+</div>
+
+
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.querySelector('form');
+  
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Здесь будет код для отправки данных на сервер
+    // В реальном приложении здесь должен быть AJAX-запрос
+    
+
+    document.getElementById('success-modal').classList.add('modal-open');
+    
+
+    form.reset();
+  });
+});
+
+</script>
+{% endblock %}

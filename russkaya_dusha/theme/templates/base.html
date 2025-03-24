@@ -1,0 +1,275 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Автосалон "Русская душа"{% endblock %}</title>
+    {% tailwind_css %}
+
+</head>
+<body class="flex flex-col min-h-screen" data-theme="light">
+    {% include 'includes/header.html' %}
+
+    <main class="flex-grow container mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include 'includes/footer.html' %}
+
+    <script src="{% static 'js/flyonui.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} fade-out" role="alert">
+            <div class="flex items-center justify-between">
+                <div>
+                    {{ message }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <style>
+        .messages {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            max-width: 400px;
+        }
+        
+        .alert {
+            margin-bottom: 10px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.3s ease-out forwards;
+        }
+        
+        .alert-success {
+            background-color: #36D399;
+            color: white;
+        }
+        
+        .alert-error {
+            background-color: #F87272;
+            color: white;
+        }
+        
+        .alert-warning {
+            background-color: #FBBD23;
+            color: white;
+        }
+        
+        .alert-info {
+            background-color: #3ABFF8;
+            color: white;
+        }
+        
+        .close-alert {
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        
+        .close-alert:hover {
+            opacity: 1;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+    </style>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Получаем все сообщения
+            const messages = document.querySelectorAll('.alert');
+            
+            // Для каждого сообщения добавляем обработчик для кнопки закрытия
+            messages.forEach(message => {
+                // Кнопка закрытия
+                const closeBtn = message.querySelector('.close-alert');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', function() {
+                        fadeOutAndRemove(message);
+                    });
+                }
+                
+                // Автоматическое скрытие через 5 секунд
+                setTimeout(function() {
+                    fadeOutAndRemove(message);
+                }, 5000); // 5000 мс = 5 секунд
+            });
+            
+            // Функция для плавного скрытия и удаления элемента
+            function fadeOutAndRemove(element) {
+                // Добавляем анимацию исчезновения
+                element.style.animation = 'fadeOut 0.5s ease-out forwards';
+                
+                // Удаляем элемент после завершения анимации
+                setTimeout(function() {
+                    if (element.parentNode) {
+                        element.parentNode.removeChild(element);
+                        
+                        // Если больше нет сообщений, удаляем контейнер
+                        const messagesContainer = document.querySelector('.messages');
+                        if (messagesContainer && messagesContainer.children.length === 0) {
+                            messagesContainer.parentNode.removeChild(messagesContainer);
+                        }
+                    }
+                }, 500); // 500 мс = 0.5 секунды (длительность анимации)
+            }
+        });
+    </script>
+    {% endif %}   
+
+<!-- Модальное окно для формы связи -->
+<div id="contact-modal" class="overlay modal overlay-open:opacity-100 hidden [--tab-accessibility-limited:false]" role="dialog" tabindex="-1">
+    <div class="modal-dialog overlay-open:opacity-100">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Связаться с нами</h3>
+          <button type="button" class="btn btn-text btn-circle btn-sm absolute end-3 top-3" aria-label="Close" data-overlay="#contact-modal">
+            <span class="icon-[tabler--x] size-4"></span>
+          </button>
+        </div>
+        
+        <form method="post" action="{% url 'autosalon:contact_modal' %}" id="contact-modal-form">
+          {% csrf_token %}
+          <div class="modal-body">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div class="form-control">
+                <label class="label label-text" for="modal-name">Имя*</label>
+                <input type="text" name="name" id="modal-name" placeholder="Иван Иванов" class="input input-bordered w-full" required />
+              </div>
+              
+              <div class="form-control">
+                <label class="label label-text" for="modal-phone">Телефон*</label>
+                <input type="tel" name="phone" id="modal-phone" placeholder="+7 (___) ___-__-__" class="input input-bordered w-full" required />
+              </div>
+            </div>
+            
+            <div class="form-control mb-4">
+              <label class="label label-text" for="modal-email">Email*</label>
+              <input type="email" name="email" id="modal-email" placeholder="example@mail.ru" class="input input-bordered w-full" required />
+            </div>
+            
+            <div class="form-control mb-4">
+              <label class="label label-text" for="modal-subject">Тема обращения*</label>
+              <select name="subject" id="modal-subject" class="select select-bordered w-full" required>
+                <option value="general">Общий вопрос</option>
+                <option value="sales">Покупка автомобиля</option>
+                <option value="service">Сервисное обслуживание</option>
+                <option value="test_drive">Запись на тест-драйв</option>
+                <option value="feedback">Отзыв о работе автосалона</option>
+              </select>
+            </div>
+            
+            <div class="form-control mb-4">
+              <label class="label label-text" for="modal-message">Сообщение*</label>
+              <textarea name="message" id="modal-message" rows="4" placeholder="Ваше сообщение" class="textarea textarea-bordered w-full" required></textarea>
+            </div>
+            
+            <div class="form-control">
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" class="checkbox checkbox-primary" required>
+                <span class="label-text">Я согласен на обработку персональных данных</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-soft btn-secondary" data-overlay="#contact-modal">Закрыть</button>
+            <button type="submit" class="btn btn-primary">
+              <span class="icon-[tabler--send] size-5 mr-2"></span>
+              Отправить
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Скрипт для обработки отправки формы через AJAX -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const contactForm = document.getElementById('contact-modal-form');
+      
+      contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(contactForm);
+        
+        fetch(contactForm.action, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Показываем сообщение об успехе
+            const modalBody = document.querySelector('#contact-modal .modal-body');
+            modalBody.innerHTML = `
+              <div class="alert alert-success">
+                <div class="flex items-center">
+                  <span class="icon-[tabler--check] size-5 mr-2"></span>
+                  <span>${data.message}</span>
+                </div>
+              </div>
+              <p class="text-center mt-4">Мы свяжемся с вами в ближайшее время.</p>
+            `;
+            
+            // Меняем кнопки в футере
+            const modalFooter = document.querySelector('#contact-modal .modal-footer');
+            modalFooter.innerHTML = `
+              <button type="button" class="btn btn-primary" data-overlay="#contact-modal">Закрыть</button>
+            `;
+            
+            // Сбрасываем форму
+            contactForm.reset();
+          } else {
+            // Показываем ошибки
+            Object.keys(data.errors).forEach(field => {
+              const input = document.getElementById(`modal-${field}`);
+              if (input) {
+                input.classList.add('input-error');
+                const errorLabel = document.createElement('label');
+                errorLabel.className = 'label';
+                errorLabel.innerHTML = `<span class="label-text-alt text-error">${data.errors[field]}</span>`;
+                input.parentNode.appendChild(errorLabel);
+              }
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

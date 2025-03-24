@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+
+{% block title %}Вход и регистрация | Автосалон "Русская душа"{% endblock %}
+
+{% block content %}
+<div class="flex justify-center items-center min-h-[70vh] py-8">
+  <div class="card w-full max-w-md shadow-lg">
+    <div class="card-body p-8">
+      <div class="tabs tabs-boxed mb-6 bg-base-200/50">
+        <button class="tab tab-lifted flex-1 tab-active" id="login-tab" onclick="switchTab('login')">Вход</button>
+        <button class="tab tab-lifted flex-1" id="register-tab" onclick="switchTab('register')">Регистрация</button>
+      </div>
+
+      <!-- Форма входа -->
+      <div id="login-form" class="tab-content">
+        <div class="text-center mb-6">
+          <h2 class="text-2xl font-bold text-primary">Вход в личный кабинет</h2>
+          <p class="text-base-content/70 mt-2">Введите свои данные для входа</p>
+        </div>
+
+        {% if login_form.errors %}
+        <div class="alert alert-error mb-6">
+          <div class="flex items-center">
+            <span class="icon-[tabler--alert-circle] size-5 mr-2"></span>
+            <span>Неверное имя пользователя или пароль. Пожалуйста, попробуйте снова.</span>
+          </div>
+        </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'autosalon:auth' %}">
+          {% csrf_token %}
+          <div class="form-control mb-4">
+            <label class="label" for="id_username">
+              <span class="label-text font-medium">Имя пользователя</span>
+            </label>
+            <input type="text" name="username" id="id_username" class="input input-bordered w-full" required autofocus>
+          </div>
+
+          <div class="form-control mb-6">
+            <label class="label" for="id_password">
+              <span class="label-text font-medium">Пароль</span>
+            </label>
+            <input type="password" name="password" id="id_password" class="input input-bordered w-full" required>
+            <label class="label">
+              
+            </label>
+          </div>
+
+          <input type="hidden" name="next" value="{{ next }}">
+          
+          <button type="submit" class="btn btn-primary w-full">
+            <span class="icon-[tabler--login] size-5 mr-2"></span>
+            Войти
+          </button>
+        </form>
+      </div>
+
+      <!-- Форма регистрации -->
+      <div id="register-form" class="tab-content hidden">
+        <div class="text-center mb-6">
+          <h2 class="text-2xl font-bold text-primary">Регистрация</h2>
+          <p class="text-base-content/70 mt-2">Создайте аккаунт в автосалоне "Русская душа"</p>
+        </div>
+
+        {% if register_form.errors %}
+        <div class="alert alert-error mb-6">
+          <div class="flex items-center">
+            <span class="icon-[tabler--alert-circle] size-5 mr-2"></span>
+            <span>Пожалуйста, исправьте ошибки в форме.</span>
+          </div>
+          <ul class="list-disc list-inside mt-2">
+            {% for field in register_form %}
+              {% for error in field.errors %}
+                <li>{{ field.label }}: {{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+            {% for error in register_form.non_field_errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'autosalon:auth' %}?mode=register" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="hidden" name="form_type" value="register">
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div class="form-control">
+              <label class="label" for="id_first_name">
+                <span class="label-text font-medium">Имя</span>
+              </label>
+              <input type="text" name="first_name" id="id_first_name" class="input input-bordered w-full" required>
+            </div>
+            
+            <div class="form-control">
+              <label class="label" for="id_last_name">
+                <span class="label-text font-medium">Фамилия</span>
+              </label>
+              <input type="text" name="last_name" id="id_last_name" class="input input-bordered w-full" required>
+            </div>
+          </div>
+          
+          <div class="form-control mb-4">
+            <label class="label" for="id_reg_username">
+              <span class="label-text font-medium">Имя пользователя</span>
+            </label>
+            <input type="text" name="username" id="id_reg_username" class="input input-bordered w-full" required>
+          </div>
+          
+          <div class="form-control mb-4">
+            <label class="label" for="id_email">
+              <span class="label-text font-medium">Email</span>
+            </label>
+            <input type="email" name="email" id="id_email" class="input input-bordered w-full" required>
+          </div>
+          
+          <div class="form-control mb-4">
+            <label class="label" for="id_phone">
+              <span class="label-text font-medium">Телефон</span>
+            </label>
+            <input type="tel" name="phone" id="id_phone" class="input input-bordered w-full" placeholder="+7 (___) ___-__-__">
+          </div>
+          
+          <div class="form-control mb-4">
+            <label class="label" for="id_avatar">
+              <span class="label-text font-medium">Аватар (необязательно)</span>
+            </label>
+            <div class="flex items-center gap-4">
+              <div id="avatar-preview" class="hidden">
+                <img src="" alt="Предпросмотр" class="w-20 h-20 rounded-full object-cover border-2 border-primary">
+              </div>
+              <div class="flex flex-col gap-2">
+                <label for="id_avatar" class="btn btn-primary">
+                  <span class="icon-[tabler--upload] size-4 mr-2"></span>
+                  Выбрать фото
+                </label>
+                <input type="file" name="avatar" id="id_avatar" class="hidden" accept="image/*">
+                <button type="button" id="clear-avatar" class="btn btn-outline btn-sm">Очистить</button>
+              </div>
+            </div>
+          </div>
+ 
+
+
+          <div class="form-control mb-4">
+            <label class="label" for="id_password1">
+              <span class="label-text font-medium">Пароль</span>
+            </label>
+            <input type="password" name="password1" id="id_password1" class="input input-bordered w-full" required>
+          </div>
+          
+          <div class="form-control mb-6">
+            <label class="label" for="id_password2">
+              <span class="label-text font-medium">Подтверждение пароля</span>
+            </label>
+            <input type="password" name="password2" id="id_password2" class="input input-bordered w-full" required>
+          </div>
+          
+          <div class="form-control mb-6">
+            <label class="label cursor-pointer justify-start gap-2">
+              <input type="checkbox" name="agree_terms" class="checkbox checkbox-primary" required>
+              <span class="label-text">Я согласен с <a href="#" class="link link-hover text-accent">условиями использования</a> и <a href="#" class="link link-hover text-accent">политикой конфиденциальности</a></span>
+            </label>
+          </div>
+          
+          <button type="submit" class="btn btn-primary w-full">
+            <span class="icon-[tabler--user-plus] size-5 mr-2"></span>
+            Зарегистрироваться
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Функция для переключения между вкладками
+  function switchTab(tab) {
+    // Скрываем все содержимое вкладок
+    document.querySelectorAll('.tab-content').forEach(content => {
+      content.classList.add('hidden');
+    });
+    
+    // Убираем активный класс со всех вкладок
+    document.querySelectorAll('.tab').forEach(tabEl => {
+      tabEl.classList.remove('tab-active');
+    });
+    
+    // Показываем выбранную вкладку и делаем ее активной
+    document.getElementById(tab + '-form').classList.remove('hidden');
+    document.getElementById(tab + '-tab').classList.add('tab-active');
+    
+    // Обновляем URL с параметром mode
+    const url = new URL(window.location);
+    url.searchParams.set('mode', tab);
+    window.history.pushState({}, '', url);
+  }
+  
+  // При загрузке страницы проверяем параметр mode в URL
+  document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const mode = urlParams.get('mode');
+    
+    if (mode === 'register') {
+      switchTab('register');
+    } else {
+      switchTab('login');
+    }
+    
+
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const avatarInput = document.getElementById('id_avatar');
+    const avatarPreview = document.getElementById('avatar-preview');
+    const clearAvatarBtn = document.getElementById('clear-avatar');
+    
+    if (avatarInput && avatarPreview && clearAvatarBtn) {
+      avatarInput.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+          const reader = new FileReader();
+          
+          reader.onload = function(e) {
+            const img = avatarPreview.querySelector('img');
+            img.src = e.target.result;
+            avatarPreview.classList.remove('hidden');
+          };
+          
+          reader.readAsDataURL(this.files[0]);
+        }
+      });
+      
+      clearAvatarBtn.addEventListener('click', function() {
+        avatarInput.value = '';
+        avatarPreview.classList.add('hidden');
+      });
+    }
+  });
+</script>
+{% endblock %}

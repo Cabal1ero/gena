@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block title %}О компании - Автосалон "Русская душа"{% endblock %}
+
+{% block content %}
+<!-- Верхний баннер с изображением -->
+<div class="w-full max-w-[1280px] mx-auto mb-12">
+  <div class="rounded-2xl overflow-hidden shadow-lg">
+    <img
+      src="/static/img/about-banner.jpg"
+      alt="Автосалон Русская душа"
+      class="w-full h-[680px] object-cover"
+    >
+  </div>
+</div>
+
+<!-- Основное содержимое "О нас" -->
+<div class="w-full max-w-[1280px] mx-auto mb-16">
+  <div class="text-center mb-12">
+    <h1 class="text-4xl md:text-5xl font-bold text-primary mb-4">О нас</h1>
+    <div class="w-16 h-1 bg-accent mx-auto mb-8"></div>
+    <div class="max-w-3xl mx-auto">
+      <p class="text-xl md:text-2xl font-medium mb-6">
+        Добро пожаловать в автосалон "Русская душа" – место, где автомобильные мечты становятся реальностью!
+      </p>
+      <p class="text-lg leading-relaxed text-base-content/80">
+        Мы гордимся тем, что предлагаем своим клиентам широкий выбор автомобилей на любой вкус и бюджет. Наша команда профессионалов всегда готова помочь вам сделать правильный выбор, будь то покупка нового автомобиля, подбор подходящего авто с пробегом или оформление автокредита на выгодных условиях.
+      </p>
+    </div>
+  </div>
+  
+  <!-- Секция "Наша команда" с ключевыми показателями -->
+  <div class="bg-base-200/50 rounded-2xl p-10 mb-16">
+    <h2 class="text-3xl font-bold text-center mb-8">Наша команда</h2>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <!-- Показатель 1 -->
+      <div class="card bg-base-100 shadow-md hover:shadow-lg transition-all">
+        <div class="card-body text-center">
+          <div class="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="icon-[tabler--clock] size-8 text-primary"></span>
+          </div>
+          <span class="text-4xl font-bold text-primary mb-2">5</span>
+          <h3 class="text-xl font-semibold">лет на рынке</h3>
+        </div>
+      </div>
+      
+      <!-- Показатель 2 -->
+      <div class="card bg-base-100 shadow-md hover:shadow-lg transition-all">
+        <div class="card-body text-center">
+          <div class="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="icon-[tabler--users] size-8 text-primary"></span>
+          </div>
+          <span class="text-4xl font-bold text-primary mb-2">500</span>
+          <h3 class="text-xl font-semibold">сотрудников</h3>
+        </div>
+      </div>
+      
+      <!-- Показатель 3 -->
+      <div class="card bg-base-100 shadow-md hover:shadow-lg transition-all">
+        <div class="card-body text-center">
+          <div class="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="icon-[tabler--shield-check] size-8 text-primary"></span>
+          </div>
+          <span class="text-4xl font-bold text-primary mb-2">10</span>
+          <h3 class="text-xl font-semibold">лет гарантии</h3>
+        </div>
+      </div>
+      
+      <!-- Показатель 4 -->
+      <div class="card bg-base-100 shadow-md hover:shadow-lg transition-all">
+        <div class="card-body text-center">
+          <div class="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="icon-[tabler--car] size-8 text-primary"></span>
+          </div>
+          <span class="text-4xl font-bold text-primary mb-2">50</span>
+          <h3 class="text-xl font-semibold">моделей</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Дополнительная информация о компании -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
+    <div>
+      <h2 class="text-3xl font-bold mb-6">Наша миссия</h2>
+      <p class="text-lg leading-relaxed text-base-content/80 mb-4">
+        Наша миссия – сделать процесс покупки автомобиля максимально простым, прозрачным и приятным для каждого клиента. Мы стремимся не просто продавать автомобили, а помогать людям находить идеальное транспортное средство, которое будет радовать их долгие годы.
+      </p>
+      <p class="text-lg leading-relaxed text-base-content/80">
+        Мы верим, что автомобиль – это не просто средство передвижения, а отражение индивидуальности и стиля жизни его владельца. Именно поэтому мы подходим к каждому клиенту индивидуально, учитывая все его пожелания и потребности.
+      </p>
+    </div>
+    
+    <div>
+      <h2 class="text-3xl font-bold mb-6">Почему выбирают нас</h2>
+      <ul class="space-y-4">
+        <li class="flex items-start gap-3">
+          <div class="bg-primary/10 p-2 rounded-lg flex-shrink-0">
+            <span class="icon-[tabler--check] size-5 text-primary"></span>
+          </div>
+          <p class="text-lg">Официальный дилер ведущих российских автопроизводителей</p>
+        </li>
+        <li class="flex items-start gap-3">
+          <div class="bg-primary/10 p-2 rounded-lg flex-shrink-0">
+            <span class="icon-[tabler--check] size-5 text-primary"></span>
+          </div>
+          <p class="text-lg">Полное сопровождение сделки от выбора до оформления документов</p>
+        </li>
+        <li class="flex items-start gap-3">
+          <div class="bg-primary/10 p-2 rounded-lg flex-shrink-0">
+            <span class="icon-[tabler--check] size-5 text-primary"></span>
+          </div>
+          <p class="text-lg">Выгодные программы кредитования и страхования</p>
+        </li>
+        <li class="flex items-start gap-3">
+          <div class="bg-primary/10 p-2 rounded-lg flex-shrink-0">
+            <span class="icon-[tabler--check] size-5 text-primary"></span>
+          </div>
+          <p class="text-lg">Собственный сервисный центр с квалифицированными специалистами</p>
+        </li>
+        <li class="flex items-start gap-3">
+          <div class="bg-primary/10 p-2 rounded-lg flex-shrink-0">
+            <span class="icon-[tabler--check] size-5 text-primary"></span>
+          </div>
+          <p class="text-lg">Программа лояльности для постоянных клиентов</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+  <!-- Призыв к действию -->
+  <div class="bg-primary/10 rounded-2xl p-10 text-center">
+    <h2 class="text-3xl font-bold mb-4">Станьте частью нашей истории</h2>
+    <p class="text-lg max-w-2xl mx-auto mb-8">
+      Приглашаем вас посетить наш автосалон и убедиться в качестве нашего сервиса лично. 
+      Наши консультанты с радостью ответят на все ваши вопросы и помогут подобрать идеальный автомобиль.
+    </p>
+      <button type="button" class="btn btn-primary btn-lg whitespace-nowrap" aria-haspopup="dialog" aria-expanded="false" aria-controls="#contact-modal" data-overlay="#contact-modal">
+      <span class="icon-[tabler--phone] size-5 mr-2"></span>
+      Связаться с нами
+    </button>
+  </div>
+</div>
+{% endblock %}

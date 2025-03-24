@@ -1,0 +1,272 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ car_model.brand.name }} {{ car_model.name }} - Автосалон "Русская душа"{% endblock %}
+
+{% block content %}
+
+<div class="w-full max-w-[1280px] mx-auto px-4 py-8">
+
+<div class="container mx-auto px-4 py-8 max-w-6xl">
+
+<!-- Заголовок и подзаголовок -->
+<div class="mb-6">
+  <h1 class="text-4xl font-bold text-gray-900">{{ car_model.brand.name }} {{ car_model.name }}</h1>
+  <p class="text-gray-500 mt-1">{% if available_cars %}Доступно сейчас{% else %}Под заказ{% endif %}</p>
+</div>
+
+<!-- Навигационные вкладки -->
+<div class="border-b border-gray-200 mb-8">
+  <nav class="flex space-x-8">
+    <button class="tab tab-lg tab-active" id="overview-tab" onclick="switchTab('overview')">Обзор</button>
+    <button class="tab tab-lg" id="specs-tab" onclick="switchTab('specs')">Спецификации</button>
+    <button class="tab tab-lg" id="photos-tab" onclick="switchTab('photos')">Фотографии</button>
+  </nav>
+</div>
+
+<div id="overview-content" class="tab-content">
+  <!-- Галерея изображений -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+    <!-- Основное изображение модели -->
+    <div class="rounded-lg overflow-hidden">
+      {% if car_model.image %}
+      <img src="{{ car_model.image.url }}" alt="{{ car_model.brand.name }} {{ car_model.name }}" class="w-full h-auto object-cover">
+      {% else %}
+      <img src="https://placehold.co/600x400/red/white?text={{ car_model.brand.name }}+{{ car_model.name }}" alt="{{ car_model.brand.name }} {{ car_model.name }}" class="w-full h-auto object-cover">
+      {% endif %}
+    </div>
+    
+    <!-- Дополнительные изображения (заглушки или из галереи) -->
+    <div class="rounded-lg overflow-hidden">
+      <img src="https://placehold.co/600x400/black/yellow?text={{ car_model.brand.name }}+{{ car_model.name }}+Black" alt="{{ car_model.brand.name }} {{ car_model.name }} черного цвета с желтыми фарами, ночной вид" class="w-full h-auto object-cover">
+    </div>
+    
+    <div class="rounded-lg overflow-hidden">
+      <img src="https://placehold.co/600x400/white/gray?text={{ car_model.brand.name }}+{{ car_model.name }}+White" alt="{{ car_model.brand.name }} {{ car_model.name }} белого цвета, вид спереди, на мокрой дороге" class="w-full h-auto object-cover">
+    </div>
+    
+    <div class="rounded-lg overflow-hidden">
+      <img src="https://placehold.co/600x400/silver/white?text={{ car_model.brand.name }}+{{ car_model.name }}+Silver" alt="{{ car_model.brand.name }} {{ car_model.name }} серебристого цвета, вид сзади" class="w-full h-auto object-cover">
+    </div>
+    
+    <!-- Изображение интерьера -->
+    <div class="rounded-lg overflow-hidden col-span-2 md:col-span-1">
+      <img src="https://placehold.co/600x400/gray/white?text={{ car_model.brand.name }}+{{ car_model.name }}+Interior" alt="Интерьер {{ car_model.brand.name }} {{ car_model.name }}, вид на приборную панель и руль" class="w-full h-auto object-cover">
+    </div>
+  </div>
+
+  <!-- Раздел "Доступно сейчас" -->
+  <div class="mb-10">
+    <h2 class="text-2xl font-bold text-gray-900 mb-6">{% if equipments %}Доступные комплектации{% else %}Комплектации{% endif %}</h2>
+    <div class="flex flex-wrap gap-4">
+      {% for equipment in equipments %}
+      <button class="{% if forloop.first %}model-btn-active{% else %}px-6 py-3 border border-gray-300 hover:bg-gray-50{% endif %} px-6 py-3 border rounded-md text-sm font-medium">
+        {{ car_model.brand.name }} {{ car_model.name }} {{ equipment.name }}
+      </button>
+      {% empty %}
+      <button class="model-btn-active px-6 py-3 border rounded-md text-sm font-medium">
+        {{ car_model.brand.name }} {{ car_model.name }} Classic
+      </button>
+      <button class="px-6 py-3 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50">
+        {{ car_model.brand.name }} {{ car_model.name }} Lux
+      </button>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Кнопка заказа и текст -->
+  <div class="mt-8">
+    <a href="{% url 'autosalon:services' %}">
+    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-6 rounded-md mb-4 transition duration-300">
+        Заказать онлайн
+    </button>
+  </a>
+    <p class="text-gray-500 text-sm text-center">
+      Заказать онлайн или посетить наш салон для оформления заказа
+    </p>
+  </div>
+</div>
+
+</div>
+
+<div id="specs-content" class="tab-content hidden">
+  <div class="bg-base-100 rounded-xl shadow-md p-8">
+    <h2 class="text-2xl font-bold text-primary mb-6">Технические характеристики</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+      <!-- Двигатель и трансмиссия -->
+      <div>
+        <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+          <span class="icon-[tabler--engine] size-6 text-accent"></span>
+          Двигатель и трансмиссия
+        </h3>
+        <table class="w-full">
+          <tbody>
+            <tr class="border-b border-base-300">
+              <td class="py-3 text-base-content/70">Тип двигателя</td>
+              <td class="py-3 font-medium text-right">{{ car_model.get_fuel_type_display }}</td>
+            </tr>
+            <tr class="border-b border-base-300">
+              <td class="py-3 text-base-content/70">Объем двигателя</td>
+              <td class="py-3 font-medium text-right">{{ car_model.engine_volume }} л</td>
+            </tr>
+            <tr class="border-b border-base-300">
+              <td class="py-3 text-base-content/70">Мощность</td>
+              <td class="py-3 font-medium text-right">{{ car_model.power }} л.с.</td>
+            </tr>
+            <tr class="border-b border-base-300">
+              <td class="py-3 text-base-content/70">Крутящий момент</td>
+              <td class="py-3 font-medium text-right">170 Нм при 3700 об/мин</td>
+            </tr>
+            <tr>
+              <td class="py-3 text-base-content/70">Коробка передач</td>
+              <td class="py-3 font-medium text-right">{{ car_model.get_transmission_display }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Динамические характеристики -->
+      <div>
+        <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+          <span class="icon-[tabler--speedboat] size-6 text-accent"></span>
+          Динамические характеристики
+        </h3>
+        <table class="w-full">
+          <tbody>
+            <tr class="border-b border-base-300">
+              <td class="py-3 text-base-content/70">Максимальная скорость</td>
+              <td class="py-3 font-medium text-right">{{ car_model.max_speed|default:"180" }} км/ч</td>
+            </tr>
+            <tr class="border-b border-base-300">
+              <td class="py-3 text-base-content/70">Разгон до 100 км/ч</td>
+              <td class="py-3 font-medium text-right">{{ car_model.acceleration|default:"11.2" }} с</td>
+            </tr>
+            <tr class="border-b border-base-300">
+              <td class="py-3 text-base-content/70">Расход топлива (город)</td>
+              <td class="py-3 font-medium text-right">{{ car_model.fuel_consumption_city|default:"9.2" }} л/100 км</td>
+            </tr>
+            <tr class="border-b border-base-300">
+              <td class="py-3 text-base-content/70">Расход топлива (трасса)</td>
+              <td class="py-3 font-medium text-right">{{ car_model.fuel_consumption_highway|default:"5.9" }} л/100 км</td>
+            </tr>
+            <tr>
+              <td class="py-3 text-base-content/70">Расход топлива (смешанный)</td>
+              <td class="py-3 font-medium text-right">{{ car_model.fuel_consumption|default:"7.2" }} л/100 км</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div>
+        <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+          <span class="icon-[tabler--ruler-2] size-6 text-accent"></span>
+          Размеры и масса
+        </h3>
+        <table class="w-full">
+          <tbody>
+            <tr class="border-b border-base-300">
+              <td class="py-3 text-base-content/70">Длина</td>
+              <td class="py-3 font-medium text-right">{{ car_model.length|default:"4410" }} мм</td>
+            </tr>
+            <tr class="border-b border-base-300">
+              <td class="py-3 text-base-content/70">Ширина</td>
+              <td class="py-3 font-medium text-right">{{ car_model.width|default:"1764" }} мм</td>
+            </tr>
+            <tr class="border-b border-base-300">
+              <td class="py-3 text-base-content/70">Высота</td>
+              <td class="py-3 font-medium text-right">{{ car_model.height|default:"1497" }} мм</td>
+            </tr>
+            <tr class="border-b border-base-300">
+              <td class="py-3 text-base-content/70">Колесная база</td>
+              <td class="py-3 font-medium text-right">{{ car_model.wheelbase|default:"2635" }} мм</td>
+            </tr>
+            <tr>
+              <td class="py-3 text-base-content/70">Дорожный просвет</td>
+              <td class="py-3 font-medium text-right">{{ car_model.ground_clearance|default:"178" }} мм</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div>
+        <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+          <span class="icon-[tabler--armchair] size-6 text-accent"></span>
+          Комфорт и оборудование
+        </h3>
+        
+        <table class="w-full">
+          <tbody>
+            <tr class="border-b border-base-300">
+              <td class="py-3 text-base-content/70">Климат-контроль</td>
+              <td class="py-3 font-medium text-right">{{ car_model.has_climate_control|yesno:"Да,Нет" }}</td>
+            </tr>
+            <tr class="border-b border-base-300">
+              <td class="py-3 text-base-content/70">Мультимедийная система</td>
+              <td class="py-3 font-medium text-right">{{ car_model.multimedia_system|default:"Отсутствует" }}</td>
+            </tr>
+            <tr class="border-b border-base-300">
+              <td class="py-3 text-base-content/70">Подогрев сидений</td>
+              <td class="py-3 font-medium text-right">{{ car_model.seat_heating|default:"Отсутствует" }}</td>
+            </tr>
+            <tr class="border-b border-base-300">
+              <td class="py-3 text-base-content/70">Подогрев руля</td>
+              <td class="py-3 font-medium text-right">{{ car_model.has_heated_steering_wheel|yesno:"Да,Нет" }}</td>
+            </tr>
+            <tr>
+              <td class="py-3 text-base-content/70">Объем багажника</td>
+              <td class="py-3 font-medium text-right">{{ car_model.trunk_volume|default:"480" }} л</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="photos-content" class="tab-content hidden">
+  <!-- Содержимое вкладки "Фотографии" -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <!-- Основное фото -->
+    {% if car_model.image %}
+    <div class="aspect-[4/3] rounded-xl overflow-hidden shadow-md cursor-pointer" onclick="openImageModal('{{ car_model.image.url }}', '{{ car_model }}')">
+      <img src="{{ car_model.image.url }}" alt="{{ car_model }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+    </div>
+    {% endif %}
+    
+    <!-- Дополнительные фото (заглушки) -->
+    <div class="aspect-[4/3] rounded-xl overflow-hidden shadow-md cursor-pointer" onclick="openImageModal('/static/img/car-interior.jpg', '{{ car_model }} - интерьер')">
+      <img src="/static/img/car-interior.jpg" alt="{{ car_model }} - интерьер" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+    </div>
+    
+    <div class="aspect-[4/3] rounded-xl overflow-hidden shadow-md cursor-pointer" onclick="openImageModal('/static/img/car-rear.jpg', '{{ car_model }} - вид сзади')">
+      <img src="/static/img/car-rear.jpg" alt="{{ car_model }} - вид сзади" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+<script>
+    // Функция для переключения между вкладками
+    function switchTab(tab) {
+      // Скрываем все содержимое вкладок
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.add('hidden');
+      });
+      
+      // Убираем активный класс со всех вкладок
+      document.querySelectorAll('.tab').forEach(tabEl => {
+        tabEl.classList.remove('tab-active');
+      });
+      
+      // Показываем выбранную вкладку и делаем ее активной
+      document.getElementById(tab + '-content').classList.remove('hidden');
+      document.getElementById(tab + '-tab').classList.add('tab-active');
+    }
+    
+  
+  </script>
+
+
+{% endblock %}

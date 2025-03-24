@@ -1,0 +1,408 @@
+{% extends 'base.html' %}
+
+{% block title %}Модели - Автосалон "Русская душа"{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-[1280px] mx-auto">
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+    <!-- Левая колонка с фильтрами -->
+    <div class="lg:col-span-1">
+      <div class="bg-base-100 rounded-xl shadow-md p-6 sticky top-6">
+        <h3 class="text-xl font-bold mb-4">Фильтры</h3>
+
+        <form action="" method="get">
+          <!-- Фильтр по году -->
+          <div class="form-control mb-6">
+            <label class="label font-medium">
+              <span class="label-text">Год выпуска</span>
+            </label>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="label">
+                  <span class="label-text text-sm">От</span>
+                </label>
+                <select name="year_from" class="select select-bordered w-full">
+                  <option value="">Любой</option>
+                  {% for year in years %}
+                    <option value="{{ year }}" {% if request.GET.year_from == year|stringformat:"i" %}selected{% endif %}>{{ year }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div>
+                <label class="label">
+                  <span class="label-text text-sm">До</span>
+                </label>
+                <select name="year_to" class="select select-bordered w-full">
+                  <option value="">Любой</option>
+                  {% for year in years %}
+                    <option value="{{ year }}" {% if request.GET.year_to == year|stringformat:"i" %}selected{% endif %}>{{ year }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Фильтр по комплектации -->
+          <div class="form-control mb-6">
+            <label class="label font-medium">
+              <span class="label-text">Комплектация</span>
+            </label>
+            <select name="equipment" class="select select-bordered w-full">
+              <option value="">Любая</option>
+              <option value="standard" {% if request.GET.equipment == 'standard' %}selected{% endif %}>Стандарт</option>
+              <option value="comfort" {% if request.GET.equipment == 'comfort' %}selected{% endif %}>Комфорт</option>
+              <option value="luxury" {% if request.GET.equipment == 'luxury' %}selected{% endif %}>Люкс</option>
+              <option value="premium" {% if request.GET.equipment == 'premium' %}selected{% endif %}>Премиум</option>
+              <option value="sport" {% if request.GET.equipment == 'sport' %}selected{% endif %}>Спорт</option>
+            </select>
+          </div>
+          
+          <!-- Фильтр по типу кузова -->
+          <div class="form-control mb-6">
+            <label class="label font-medium">
+              <span class="label-text">Тип кузова</span>
+            </label>
+            <div class="grid grid-cols-1 gap-2">
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="body_type" value="sedan" class="checkbox checkbox-primary" 
+                       {% if 'sedan' in request.GET.body_type %}checked{% endif %}>
+                <span class="label-text">Седан</span>
+              </label>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="body_type" value="hatchback" class="checkbox checkbox-primary"
+                       {% if 'hatchback' in request.GET.body_type %}checked{% endif %}>
+                <span class="label-text">Хэтчбек</span>
+              </label>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="body_type" value="suv" class="checkbox checkbox-primary"
+                       {% if 'suv' in request.GET.body_type %}checked{% endif %}>
+                <span class="label-text">Внедорожник</span>
+              </label>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="body_type" value="crossover" class="checkbox checkbox-primary"
+                       {% if 'crossover' in request.GET.body_type %}checked{% endif %}>
+                <span class="label-text">Кроссовер</span>
+              </label>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="body_type" value="wagon" class="checkbox checkbox-primary"
+                       {% if 'wagon' in request.GET.body_type %}checked{% endif %}>
+                <span class="label-text">Универсал</span>
+              </label>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="body_type" value="pickup" class="checkbox checkbox-primary"
+                       {% if 'pickup' in request.GET.body_type %}checked{% endif %}>
+                <span class="label-text">Пикап</span>
+              </label>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="body_type" value="minivan" class="checkbox checkbox-primary"
+                       {% if 'minivan' in request.GET.body_type %}checked{% endif %}>
+                <span class="label-text">Минивэн</span>
+              </label>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="body_type" value="coupe" class="checkbox checkbox-primary"
+                       {% if 'coupe' in request.GET.body_type %}checked{% endif %}>
+                <span class="label-text">Купе</span>
+              </label>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="body_type" value="convertible" class="checkbox checkbox-primary"
+                       {% if 'convertible' in request.GET.body_type %}checked{% endif %}>
+                <span class="label-text">Кабриолет</span>
+              </label>
+            </div>
+          </div>
+          
+          <!-- Фильтр по цвету -->
+          <div class="form-control mb-6">
+            <label class="label font-medium">
+              <span class="label-text">Цвет</span>
+            </label>
+            <div class="grid grid-cols-2 gap-2">
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="color" value="white" class="checkbox checkbox-primary" 
+                       {% if 'white' in request.GET.color %}checked{% endif %}>
+                <span class="label-text">Белый</span>
+              </label>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="color" value="black" class="checkbox checkbox-primary"
+                       {% if 'black' in request.GET.color %}checked{% endif %}>
+                <span class="label-text">Черный</span>
+              </label>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="color" value="silver" class="checkbox checkbox-primary"
+                       {% if 'silver' in request.GET.color %}checked{% endif %}>
+                <span class="label-text">Серебристый</span>
+              </label>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="color" value="gray" class="checkbox checkbox-primary"
+                       {% if 'gray' in request.GET.color %}checked{% endif %}>
+                <span class="label-text">Серый</span>
+              </label>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="color" value="red" class="checkbox checkbox-primary"
+                       {% if 'red' in request.GET.color %}checked{% endif %}>
+                <span class="label-text">Красный</span>
+              </label>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="color" value="blue" class="checkbox checkbox-primary"
+                       {% if 'blue' in request.GET.color %}checked{% endif %}>
+                <span class="label-text">Синий</span>
+              </label>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="color" value="green" class="checkbox checkbox-primary"
+                       {% if 'green' in request.GET.color %}checked{% endif %}>
+                <span class="label-text">Зеленый</span>
+              </label>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="color" value="brown" class="checkbox checkbox-primary"
+                       {% if 'brown' in request.GET.color %}checked{% endif %}>
+                <span class="label-text">Коричневый</span>
+              </label>
+            </div>
+          </div>
+          
+          <!-- Фильтр по типу топлива -->
+          <div class="form-control mb-6">
+            <label class="label font-medium">
+              <span class="label-text">Тип топлива</span>
+            </label>
+            <div class="grid grid-cols-1 gap-2">
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="fuel_type" value="petrol" class="checkbox checkbox-primary" 
+                       {% if 'petrol' in request.GET.fuel_type %}checked{% endif %}>
+                <span class="label-text">Бензин</span>
+              </label>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="fuel_type" value="diesel" class="checkbox checkbox-primary"
+                       {% if 'diesel' in request.GET.fuel_type %}checked{% endif %}>
+                <span class="label-text">Дизель</span>
+              </label>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="fuel_type" value="gas" class="checkbox checkbox-primary"
+                       {% if 'gas' in request.GET.fuel_type %}checked{% endif %}>
+                <span class="label-text">Газ</span>
+              </label>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="fuel_type" value="electric" class="checkbox checkbox-primary"
+                       {% if 'electric' in request.GET.fuel_type %}checked{% endif %}>
+                <span class="label-text">Электро</span>
+              </label>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="fuel_type" value="hybrid" class="checkbox checkbox-primary"
+                       {% if 'hybrid' in request.GET.fuel_type %}checked{% endif %}>
+                <span class="label-text">Гибрид</span>
+              </label>
+            </div>
+          </div>
+          
+          <!-- Фильтр по коробке передач -->
+          <div class="form-control mb-6">
+            <label class="label font-medium">
+              <span class="label-text">Коробка передач</span>
+            </label>
+            <div class="grid grid-cols-1 gap-2">
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="transmission" value="manual" class="checkbox checkbox-primary" 
+                       {% if 'manual' in request.GET.transmission %}checked{% endif %}>
+                <span class="label-text">Механическая</span>
+              </label>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="transmission" value="automatic" class="checkbox checkbox-primary"
+                       {% if 'automatic' in request.GET.transmission %}checked{% endif %}>
+                <span class="label-text">Автоматическая</span>
+              </label>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="transmission" value="robot" class="checkbox checkbox-primary"
+                       {% if 'robot' in request.GET.transmission %}checked{% endif %}>
+                <span class="label-text">Робот</span>
+              </label>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="transmission" value="variator" class="checkbox checkbox-primary"
+                       {% if 'variator' in request.GET.transmission %}checked{% endif %}>
+                <span class="label-text">Вариатор</span>
+              </label>
+            </div>
+          </div>
+          
+          <!-- Фильтр по цене -->
+          <div class="form-control mb-6">
+            <label class="label font-medium">
+              <span class="label-text">Цена</span>
+            </label>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="label">
+                  <span class="label-text text-sm">От</span>
+                </label>
+                <input type="number" name="price_from" placeholder="500 000" 
+                       class="input input-bordered w-full" value="{{ request.GET.price_from }}">
+              </div>
+              <div>
+                <label class="label">
+                  <span class="label-text text-sm">До</span>
+                </label>
+                <input type="number" name="price_to" placeholder="5 000 000" 
+                       class="input input-bordered w-full" value="{{ request.GET.price_to }}">
+              </div>
+            </div>
+          </div>
+          
+          <!-- Фильтр по наличию -->
+          <div class="form-control mb-6">
+            <label class="label font-medium">
+              <span class="label-text">Наличие</span>
+            </label>
+            <div class="grid grid-cols-1 gap-2">
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="is_available" value="true" class="checkbox checkbox-primary" 
+                       {% if 'true' in request.GET.is_available %}checked{% endif %}>
+                <span class="label-text">Только в наличии</span>
+              </label>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" name="is_new" value="true" class="checkbox checkbox-primary"
+                       {% if 'true' in request.GET.is_new %}checked{% endif %}>
+                <span class="label-text">Только новинки</span>
+              </label>
+            </div>
+          </div>
+          
+          <!-- Кнопки фильтрации -->
+          <div class="flex flex-col gap-2">
+            <button type="submit" class="btn btn-primary w-full">
+              <span class="icon-[tabler--filter] size-5 mr-2"></span>
+              Применить фильтры
+            </button>
+            <a href="{% url 'autosalon:services' %}" class="btn btn-outline btn-sm w-full">Сбросить фильтры</a>
+          </div>
+        </form>
+        
+        </div>
+      </div>
+    
+    <!-- Правая колонка с контентом -->
+    <div class="lg:col-span-3">
+      <!-- Заголовок и подзаголовок -->
+      <div class="mb-8">
+        <h1 class="text-4xl font-bold text-primary mb-3">Найдите свою идеальную машину</h1>
+        <p class="text-lg text-base-content/70">
+          Просмотрите наш ассортимент и найдите автомобиль, соответствующий вашему стилю жизни
+        </p>
+      </div>
+      
+      <!-- Блок "Мы можем помочь" -->
+      <div class="border border-base-300 rounded-xl p-6 mb-10 bg-base-100 shadow-sm">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div>
+            <h3 class="text-xl font-bold mb-2">Мы можем помочь!</h3>
+            <p class="text-base-content/70">
+              Независимо от того, ищете ли вы что-то конкретное или просто хотите узнать больше о наших предложениях, мы всегда готовы помочь.
+            </p>
+          </div>
+          <button type="button" class="btn btn-primary whitespace-nowrap" aria-haspopup="dialog" aria-expanded="false" aria-controls="#contact-modal" data-overlay="#contact-modal">
+            <span class="icon-[tabler--mail] size-5 mr-2"></span>
+            Напишите нам
+          </a>
+        </div>
+      </div>
+      
+      <!-- Результаты поиска / Карточки автомобилей -->
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-10">
+        {% for car in cars %}
+        <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all">
+          <!-- Используем aspect-ratio для поддержания пропорций -->
+          <figure class="relative aspect-video">
+            <!-- Используем object-cover, но с большей высотой -->
+            {% if car.image %}
+            <img src="{{ car.image.url }}" alt="{{ car.model }}" class="w-full h-full object-cover">
+            {% else %}
+            <img src="/static/img/vesta.jpg" alt="{{ car.model }}" class="w-full h-full object-cover">
+            {% endif %}
+            
+            {% if car.is_new %}
+            <div class="absolute top-2 right-2 badge badge-success">Новинка</div>
+            {% endif %}
+          </figure>
+          
+          <div class="card-body p-5">
+            <h2 class="card-title text-xl">{{ car.model }}</h2>
+            <div class="flex flex-wrap gap-2 my-2">
+              <span class="badge badge-outline">{{ car.year }} г.</span>
+              <span class="badge badge-outline">{{ car.get_body_type_display|default:"Седан" }}</span>
+              <span class="badge badge-outline">{{ car.get_transmission_display }}</span>
+              <span class="badge badge-outline">{{ car.get_equipment_display|default:"Стандарт" }}</span>
+              <span class="badge badge-outline">{{ car.get_fuel_type_display }}</span>
+            </div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="icon-[tabler--gauge] size-5 text-base-content/70"></span>
+              <span>{{ car.mileage }} км</span>
+            </div>
+            <div class="flex items-center gap-2 mb-3">
+              <span class="icon-[tabler--palette] size-5 text-base-content/70"></span>
+              <span>{{ car.color }}</span>
+            </div>
+            <div class="text-2xl font-bold text-primary mb-4">{{ car.price|floatformat:0 }} ₽</div>
+            <div class="card-actions justify-end">
+              {% if user.is_authenticated %}
+              <a href="{% url 'autosalon:order_car' car.id %}" class="btn btn-primary btn-block">Приобрести</a>
+              {% else %}
+              <a href="{% url 'autosalon:auth' %}?next={{ request.path }}" class="btn btn-primary btn-block">Приобрести</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full text-center py-10">
+          <div class="flex justify-center mb-4">
+            <span class="icon-[tabler--search-off] size-16 text-base-content/30"></span>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Автомобили не найдены</h3>
+          <p class="text-base-content/70 mb-4">
+            К сожалению, по вашему запросу ничего не найдено. Попробуйте изменить параметры фильтрации.
+          </p>
+          <a href="{% url 'autosalon:services' %}" class="btn btn-outline">Сбросить фильтры</a>
+        </div>
+        {% endfor %}
+      </div>
+      
+      <!-- Пагинация -->
+      {% if cars.has_other_pages %}
+      <div class="flex justify-center mb-8">
+        <div class="join">
+          {% if cars.has_previous %}
+          <a href="?page={{ cars.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+             class="join-item btn">
+            <span class="icon-[tabler--chevron-left] size-5"></span>
+          </a>
+          {% else %}
+          <button class="join-item btn btn-disabled">
+            <span class="icon-[tabler--chevron-left] size-5"></span>
+          </button>
+          {% endif %}
+          
+          {% for num in cars.paginator.page_range %}
+            {% if cars.number == num %}
+            <button class="join-item btn btn-active">{{ num }}</button>
+            {% elif num > cars.number|add:'-3' and num < cars.number|add:'3' %}
+            <a href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+               class="join-item btn">{{ num }}</a>
+            {% endif %}
+          {% endfor %}
+          
+          {% if cars.has_next %}
+          <a href="?page={{ cars.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+             class="join-item btn">
+            <span class="icon-[tabler--chevron-right] size-5"></span>
+          </a>
+          {% else %}
+          <button class="join-item btn btn-disabled">
+            <span class="icon-[tabler--chevron-right] size-5"></span>
+          </button>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+

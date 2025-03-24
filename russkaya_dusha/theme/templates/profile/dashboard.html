@@ -1,0 +1,570 @@
+{% extends 'base.html' %}
+
+{% block title %}Личный кабинет - Автосалон "Русская душа"{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-[1280px] mx-auto px-4 py-8">
+
+
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+    <!-- Левая колонка с информацией о пользователе -->
+    <div class="lg:col-span-1">
+      <!-- Профиль пользователя -->
+      <div class="bg-base-100 rounded-xl shadow-md p-6 mb-6 sticky top-6">
+        <div class="flex flex-col items-center mb-6">
+          <div class="avatar mb-4">
+            <div class="w-24 h-24 rounded-full">
+              {% if user.profile.avatar %}
+              <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" />
+              {% else %}
+              <div class="bg-primary text-primary-content flex items-center justify-center text-3xl font-bold">
+                {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          <h2 class="text-xl font-bold text-center">{{ user.get_full_name|default:user.username }}</h2>
+          <p class="text-base-content/70 text-center">{{ user.email }}</p>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <!-- Меню навигации -->
+        <nav class="flex flex-col gap-2">
+          <button class="btn btn-ghost justify-start gap-2 tab-active" id="profile-tab" onclick="switchTab('profile')">
+            <span class="icon-[tabler--user] size-5"></span>
+            Профиль
+          </button>
+          <button class="btn btn-ghost justify-start gap-2" id="orders-tab" onclick="switchTab('orders')">
+            <span class="icon-[tabler--shopping-cart] size-5"></span>
+            Мои заказы
+          </button>
+          <button class="btn btn-ghost justify-start gap-2" id="service-tab" onclick="switchTab('service')">
+            <span class="icon-[tabler--tool] size-5"></span>
+            Сервисные заявки
+          </button>
+        </nav>
+        
+        <div class="divider"></div>
+        
+        <!-- Кнопка выхода -->
+        <a href="" class="btn btn-outline btn-error w-full gap-2">
+          <span class="icon-[tabler--logout] size-5"></span>
+          Выйти
+        </a>
+      </div>
+    </div>
+    
+    <!-- Правая колонка с основным содержимым -->
+    <div class="lg:col-span-3">
+      
+      <!-- Секция "Профиль" -->
+      <div id="profile-content" class="tab-content">
+        <div class="bg-base-100 rounded-xl shadow-md p-6 mb-6">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold flex items-center gap-2">
+              <span class="icon-[tabler--user] size-7 text-primary"></span>
+              Личная информация
+            </h2>
+            <button id="toggle-edit-form" class="btn btn-primary btn-sm gap-2">
+              <span class="icon-[tabler--edit] size-5"></span>
+              Редактировать
+            </button>
+          </div>
+          
+          <!-- Информация о пользователе -->
+          <div id="profile-info" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Аватар и основная информация -->
+            <div class="md:col-span-1">
+              <div class="flex flex-col items-center text-center">
+                <div class="avatar mb-4">
+                  <div class="w-32 h-32 rounded-full">
+                    {% if user.profile.avatar %}
+                      <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" />
+                    {% else %}
+                      <div class="bg-primary text-primary-content flex items-center justify-center text-3xl font-bold">
+                        {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+                
+                <h3 class="text-xl font-bold">{{ user.get_full_name }}</h3>
+                <p class="text-base-content/70">{{ user.username }}</p>
+              </div>
+            </div>
+            
+            <!-- Детальная информация -->
+            <div class="md:col-span-2">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h4 class="font-medium text-base-content/70 mb-1">Имя</h4>
+                  <p class="font-semibold">{{ user.first_name }}</p>
+                </div>
+                
+                <div>
+                  <h4 class="font-medium text-base-content/70 mb-1">Фамилия</h4>
+                  <p class="font-semibold">{{ user.last_name }}</p>
+                </div>
+                
+                <div>
+                  <h4 class="font-medium text-base-content/70 mb-1">Email</h4>
+                  <p class="font-semibold">{{ user.email }}</p>
+                </div>
+                
+                <div>
+                  <h4 class="font-medium text-base-content/70 mb-1">Телефон</h4>
+                  <p class="font-semibold">{{ user.profile.phone|default:"Не указан" }}</p>
+                </div>
+                
+                <div>
+                  <h4 class="font-medium text-base-content/70 mb-1">Дата регистрации</h4>
+                  <p class="font-semibold">{{ user.date_joined|date:"d.m.Y" }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Форма редактирования (скрыта по умолчанию) -->
+          <div id="edit-form" class="hidden mt-6 pt-6 border-t border-base-300">
+            <h3 class="text-xl font-bold mb-4">Редактирование профиля</h3>
+            
+            <form method="post" action="{% url 'autosalon:profile_update' %}" enctype="multipart/form-data">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="update_profile">
+              <!-- Улучшенный блок для аватара -->
+              <div class="flex flex-col md:flex-row gap-6 mb-6">
+                <div class="flex flex-col items-center">
+                  <div class="avatar mb-3">
+                    <div class="w-32 h-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2" id="avatar-preview">
+                      {% if user.profile.avatar %}
+                        <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" />
+                      {% else %}
+                        <div class="bg-primary text-primary-content flex items-center justify-center text-3xl font-bold">
+                          {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+                        </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                  
+                  <div class="flex flex-col items-center">
+                    <label for="id_avatar" class="btn btn-sm btn-outline gap-2 mb-2">
+                      <span class="icon-[tabler--photo-up] size-4"></span>
+                      Выбрать фото
+                    </label>
+                    <input type="file" name="avatar" id="id_avatar" class="hidden" accept="image/*" onchange="previewAvatar(this)">
+                    
+                    {% if user.profile.avatar %}
+                    <button type="button" class="btn btn-sm btn-ghost btn-error text-xs" onclick="removeAvatar()">
+                      Удалить фото
+                    </button>
+                    <input type="hidden" name="remove_avatar" id="remove_avatar" value="false">
+                    {% endif %}
+                  </div>
+                </div>
+                
+                <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="form-control">
+                    <label class="label" for="id_first_name">
+                      <span class="label-text font-medium">Имя</span>
+                    </label>
+                    <input type="text" name="first_name" id="id_first_name" class="input input-bordered w-full" value="{{ user.first_name }}" required>
+                  </div>
+                  
+                  <div class="form-control">
+                    <label class="label" for="id_last_name">
+                      <span class="label-text font-medium">Фамилия</span>
+                    </label>
+                    <input type="text" name="last_name" id="id_last_name" class="input input-bordered w-full" value="{{ user.last_name }}" required>
+                  </div>
+                  
+                  <div class="form-control">
+                    <label class="label" for="id_email">
+                      <span class="label-text font-medium">Email</span>
+                    </label>
+                    <input type="email" name="email" id="id_email" class="input input-bordered w-full" value="{{ user.email }}" required>
+                  </div>
+                  
+                  <div class="form-control">
+                    <label class="label" for="id_phone">
+                      <span class="label-text font-medium">Телефон</span>
+                    </label>
+                    <input type="tel" name="phone" id="id_phone" class="input input-bordered w-full" value="{{ user.profile.phone|default:'' }}" placeholder="+7 (___) ___-__-__">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="flex justify-end gap-2 mt-6">
+                <button type="button" id="cancel-edit" class="btn btn-outline">Отмена</button>
+                <button type="submit" class="btn btn-primary gap-2">
+                  <span class="icon-[tabler--device-floppy] size-5"></span>
+                  Сохранить
+                </button>
+              </div>
+            </form>
+          </div>
+          
+          <script>
+            // Скрипт для переключения между просмотром и редактированием профиля
+            document.addEventListener('DOMContentLoaded', function() {
+              const toggleEditBtn = document.getElementById('toggle-edit-form');
+              const cancelEditBtn = document.getElementById('cancel-edit');
+              const profileInfo = document.getElementById('profile-info');
+              const editForm = document.getElementById('edit-form');
+              
+              toggleEditBtn.addEventListener('click', function() {
+                profileInfo.classList.add('hidden');
+                editForm.classList.remove('hidden');
+              });
+              
+              cancelEditBtn.addEventListener('click', function() {
+                profileInfo.classList.remove('hidden');
+                editForm.classList.add('hidden');
+              });
+            });
+            
+            // Функция предпросмотра аватара
+            function previewAvatar(input) {
+              if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                  const previewDiv = document.getElementById('avatar-preview');
+                  
+                  // Удаляем текущее содержимое
+                  while (previewDiv.firstChild) {
+                    previewDiv.removeChild(previewDiv.firstChild);
+                  }
+                  
+                  // Создаем новое изображение
+                  const img = document.createElement('img');
+                  img.src = e.target.result;
+                  img.alt = 'Предпросмотр аватара';
+                  previewDiv.appendChild(img);
+                  
+                  // Сбрасываем флаг удаления аватара, если он был установлен
+                  const removeAvatarInput = document.getElementById('remove_avatar');
+                  if (removeAvatarInput) {
+                    removeAvatarInput.value = 'false';
+                  }
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+              }
+            }
+            
+            // Функция удаления аватара
+            function removeAvatar() {
+              const previewDiv = document.getElementById('avatar-preview');
+              
+              // Удаляем текущее содержимое
+              while (previewDiv.firstChild) {
+                previewDiv.removeChild(previewDiv.firstChild);
+              }
+              
+              // Создаем заполнитель с инициалами
+              const initialsDiv = document.createElement('div');
+              initialsDiv.className = 'bg-primary text-primary-content flex items-center justify-center text-3xl font-bold';
+              initialsDiv.textContent = '{{ user.first_name|first|upper }}{{ user.last_name|first|upper }}';
+              previewDiv.appendChild(initialsDiv);
+              
+              // Устанавливаем флаг удаления аватара
+              document.getElementById('remove_avatar').value = 'true';
+              
+              // Сбрасываем значение поля выбора файла
+              document.getElementById('id_avatar').value = '';
+            }
+          </script>
+        
+        <!-- Секция безопасности -->
+        <div class="bg-base-100 rounded-xl shadow-md p-6">
+          <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+            <span class="icon-[tabler--lock] size-7 text-primary"></span>
+            Безопасность
+          </h2>
+          
+          <form method="post" action="{% url 'autosalon:profile_update' %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="change_password">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="form-control">
+                <label class="label" for="id_old_password">
+                  <span class="label-text font-medium">Текущий пароль</span>
+                </label>
+                <input type="password" name="old_password" id="id_old_password" class="input input-bordered w-full" required>
+              </div>
+              
+              <div></div>
+              
+              <div class="form-control">
+                <label class="label" for="id_new_password1">
+                  <span class="label-text font-medium">Новый пароль</span>
+                </label>
+                <input type="password" name="new_password1" id="id_new_password1" class="input input-bordered w-full" required>
+              </div>
+              
+              <div class="form-control">
+                <label class="label" for="id_new_password2">
+                  <span class="label-text font-medium">Подтверждение нового пароля</span>
+                </label>
+                <input type="password" name="new_password2" id="id_new_password2" class="input input-bordered w-full" required>
+              </div>
+            </div>
+            
+            <div class="mt-6">
+              <button type="submit" class="btn btn-primary">
+                <span class="icon-[tabler--key] size-5 mr-2"></span>
+                Изменить пароль
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+        </div>
+      
+      <!-- Секция "Мои заказы" -->
+      <div id="orders-content" class="tab-content hidden">
+        <div class="bg-base-100 rounded-xl shadow-md p-6 mb-6">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold flex items-center gap-2">
+              <span class="icon-[tabler--shopping-cart] size-7 text-primary"></span>
+              Мои заказы
+            </h2>
+          </div>
+
+          <!-- Список заказов -->
+          <div class="space-y-4">
+            {% for order in orders %}
+              <div class="card bg-base-100 border border-base-300 hover:border-primary transition-all {% if order.status == 'completed' %}opacity-80{% elif order.status == 'cancelled' %}opacity-70{% endif %}">
+                <div class="card-body p-5">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <h3 class="card-title text-lg">{{ order.car.model }}</h3>
+                      <p class="text-base-content/70 text-sm">Заказ #{{ order.id }} от {{ order.created_at|date:"d.m.Y" }}</p>
+                    </div>
+                    <div class="badge 
+                      {% if order.status == 'new' %}badge-info
+                      {% elif order.status == 'processing' %}badge-warning
+                      {% elif order.status == 'confirmed' %}badge-primary
+                      {% elif order.status == 'completed' %}badge-success
+                      {% elif order.status == 'cancelled' %}badge-error
+                      {% endif %}">
+                      {{ order.get_status_display }}
+                    </div>
+                  </div>
+                  
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
+                    <div class="flex items-center gap-2">
+                      <span class="icon-[tabler--calendar] size-5 text-base-content/70"></span>
+                      <div>
+                        <div class="text-xs text-base-content/70">Год выпуска</div>
+                        <div class="font-medium">{{ order.car.year }}</div>
+                      </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-2">
+                      <span class="icon-[tabler--gauge] size-5 text-base-content/70"></span>
+                      <div>
+                        <div class="text-xs text-base-content/70">Пробег</div>
+                        <div class="font-medium">{{ order.car.mileage }} км</div>
+                      </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-2">
+                      <span class="icon-[tabler--coin] size-5 text-base-content/70"></span>
+                      <div>
+                        <div class="text-xs text-base-content/70">Стоимость</div>
+                        <div class="font-medium">{{ order.car.price|floatformat:0 }} ₽</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="badge badge-outline">{{ order.car.get_transmission_display }}</span>
+                    <span class="badge badge-outline">{{ order.car.get_fuel_type_display }}</span>
+                    <span class="badge badge-outline">{{ order.car.color }}</span>
+                  </div>
+                  
+                  <div class="card-actions justify-end">
+                    {% if order.status == 'new' or order.status == 'processing' %}
+<form method="post" action="{% url 'autosalon:cancel_order' order.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-sm btn-outline btn-error">Отменить</button>
+</form>
+{% endif %}
+                  </div>
+                </div>
+              </div>
+            {% empty %}
+              <!-- Если нет заказов -->
+              <div class="text-center py-12">
+                <div class="flex justify-center mb-4">
+                  <span class="icon-[tabler--shopping-cart-off] size-16 text-base-content/30"></span>
+                </div>
+                <h3 class="text-xl font-bold mb-2">У вас пока нет заказов</h3>
+                <p class="text-base-content/70 mb-6 max-w-md mx-auto">
+                  Просмотрите наш каталог автомобилей и сделайте свой первый заказ.
+                </p>
+                <a href="{% url 'autosalon:services' %}" class="btn btn-primary gap-2">
+                  <span class="icon-[tabler--car] size-5"></span>
+                  Перейти к каталогу
+                </a>
+              </div>
+            {% endfor %}
+          </div>
+          
+      
+          
+        </div>
+      </div>
+      
+      <!-- Секция "Сервисные заявки" -->
+      <div id="service-content" class="tab-content hidden">
+        <div class="bg-base-100 rounded-xl shadow-md p-6 mb-6">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold flex items-center gap-2">
+              <span class="icon-[tabler--tool] size-7 text-primary"></span>
+              Сервисные заявки
+            </h2>
+            <a class="btn btn-primary gap-2" href="{% url 'autosalon:service_center' %}">
+              <span class="icon-[tabler--plus] size-5"></span>
+              Новая заявка
+            </a>
+          </div>
+          
+          <!-- Список заявок -->
+          <div class="space-y-4">
+            <!-- -->
+            {% if service_requests %}
+            {% for service_request in service_requests %}
+            <div class="card bg-base-100 border border-base-300 hover:border-primary transition-all">
+              <div class="card-body p-5">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h3 class="card-title text-lg">{{ service_request.get_service_type_display }}</h3>
+                    <p class="text-base-content/70 text-sm">{{ service_request.car_model }}</p>
+                  </div>
+                  <div class="badge {% if service_request.status == 'new' or service_request.status == 'confirmed' %}badge-primary{% elif service_request.status == 'completed' %}badge-success{% elif service_request.status == 'cancelled' %}badge-error{% endif %}">
+                    {{ service_request.get_status_display }}
+                  </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
+                  <div class="flex items-center gap-2">
+                    <span class="icon-[tabler--calendar] size-5 text-base-content/70"></span>
+                    <div>
+                      <div class="text-xs text-base-content/70">Дата записи</div>
+                      <div class="font-medium">{{ service_request.service_date|date:"d.m.Y" }}</div>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-center gap-2">
+                    <span class="icon-[tabler--clock] size-5 text-base-content/70"></span>
+                    <div>
+                      <div class="text-xs text-base-content/70">Время</div>
+                      <div class="font-medium">{{ service_request.created_at|time:"H:i" }}</div>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-center gap-2">
+                    <span class="icon-[tabler--map-pin] size-5 text-base-content/70"></span>
+                    <div>
+                      <div class="text-xs text-base-content/70">Сервисный центр</div>
+                      <div class="font-medium">Таганрог, ул. Инициативная, 48</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="flex flex-wrap gap-2 mb-4">
+                  <span>
+                    {{ service_request.comments }}
+                  </span>
+                </div>
+                
+                <div class="card-actions justify-end">
+                  {% if service_request.status == 'new' or service_request.status == 'confirmed' %}
+                  <form method="post" action="{% url 'autosalon:cancel_service' service_request.id %}">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-sm btn-outline btn-error">Отменить</button>
+                  </form>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+           
+            
+         
+         
+          </div>
+          {% else %}
+          <!-- Если нет заявок -->
+          <div class="hidden text-center py-12">
+            <div class="flex justify-center mb-4">
+              <span class="icon-[tabler--tool-off] size-16 text-base-content/30"></span>
+            </div>
+            <h3 class="text-xl font-bold mb-2">У вас пока нет сервисных заявок</h3>
+            <p class="text-base-content/70 mb-6 max-w-md mx-auto">
+              Запишитесь на техническое обслуживание или ремонт вашего автомобиля в нашем сервисном центре.
+            </p>
+            <button class="btn btn-primary gap-2" onclick="document.getElementById('new-service-modal').showModal()">
+              <span class="icon-[tabler--plus] size-5"></span>
+              Создать заявку
+            </button>
+          </div>
+          {% endif %}
+          <!-- Пагинация -->
+          
+        </div>
+      
+  
+      
+    </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Функция для переключения между вкладками
+  function switchTab(tab) {
+    // Скрываем все содержимое вкладок
+    document.querySelectorAll('.tab-content').forEach(content => {
+      content.classList.add('hidden');
+    });
+    
+    // Убираем активный класс со всех вкладок
+    document.querySelectorAll('button[id$="-tab"]').forEach(tabEl => {
+      tabEl.classList.remove('tab-active');
+    });
+    
+    // Показываем выбранную вкладку и делаем ее активной
+    document.getElementById(tab + '-content').classList.remove('hidden');
+    document.getElementById(tab + '-tab').classList.add('tab-active');
+    
+    // Сохраняем выбранную вкладку в localStorage
+    localStorage.setItem('dashboardActiveTab', tab);
+  }
+  
+  // При загрузке страницы проверяем сохраненную вкладку
+  document.addEventListener('DOMContentLoaded', function() {
+    const savedTab = localStorage.getItem('dashboardActiveTab');
+    if (savedTab) {
+      switchTab(savedTab);
+    }
+  });
+</script>
+
+<style>
+  /* Стили для плейсхолдеров (временно) */
+  .placeholder {
+    background-color: rgba(0,0,0,0.05);
+    border: 2px dashed rgba(0,0,0,0.1);
+    border-radius: 0.5rem;
+    padding: 2rem;
+    text-align: center;
+    color: rgba(0,0,0,0.5);
+    font-style: italic;
+  }
+</style>
+{% endblock %}
