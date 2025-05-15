@@ -38,8 +38,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'autosalon',
-    "tailwind",
-    "theme",
+    # "tailwind",
+    # "theme",
+    "apps.accounts",
+    # "apps.cars",
+    # "apps.cart",
+    # "apps.contact",
+    # "apps.orders",
+    # "apps.service",
+    "apps.core",
 ]
 TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = [
@@ -57,6 +64,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
 
 ROOT_URLCONF = 'russkaya_dusha.urls'
 

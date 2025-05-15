@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     CarBrand, CarModel, Car, ModelImage, 
-    Equipment, EquipmentFeature, UserProfile,
+    Equipment, EquipmentFeature,
     ServiceRequest,CarOrder
 )
 from django.contrib.admin import AdminSite
@@ -51,12 +51,6 @@ class CarAdmin(admin.ModelAdmin):
     list_filter = ('model__brand', 'year', 'is_available')
     search_fields = ('model__name', 'model__brand__name', 'color')
     list_per_page = 20
-
-class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'phone')
-    search_fields = ('user__username', 'user__email', 'phone')
-
-
 
 class ServiceRequestAdmin(admin.ModelAdmin):
     list_display = ('name', 'phone', 'car_model', 'service_date', 'service_type', 'status', 'created_at')
@@ -167,13 +161,11 @@ autosalon_admin_site.register(CarBrand, CarBrandAdmin)
 autosalon_admin_site.register(CarModel, CarModelAdmin)
 autosalon_admin_site.register(Equipment, EquipmentAdmin)
 autosalon_admin_site.register(Car, CarAdmin)
-autosalon_admin_site.register(UserProfile, UserProfileAdmin)
 
 # Также регистрируем модели в стандартной админке Django
 admin.site.register(CarBrand, CarBrandAdmin)
 admin.site.register(CarModel, CarModelAdmin)
 admin.site.register(Equipment, EquipmentAdmin)
 admin.site.register(Car, CarAdmin)
-admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(ModelImage)
 admin.site.register(EquipmentFeature)

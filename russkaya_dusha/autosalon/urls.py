@@ -11,10 +11,7 @@ urlpatterns = [
     path('models/<slug:slug>/', views.car_detail, name='car_detail'),
     path('contact-modal/', views.contact_modal, name='contact_modal'),
     path('cars/<int:car_id>/order/', views.order_car, name='order_car'),  # Новый маршрут
-    path('auth/', views.auth, name='auth'),  # Используем имя функции auth вместо auth_view
-    path('profile/', views.profile_dashboard, name='profile'),
-    path('profile/update/', views.profile_update, name='profile_update'),
-    path('logout/', LogoutView.as_view(next_page='/'), name='logout'),  # Добавляем маршрут для выхода
+ # Добавляем маршрут для выхода
     path('orders/<int:order_id>/cancel/', views.cancel_order, name='cancel_order'),
     path('service-requests/<int:service_id>/cancel/', views.cancel_service, name='cancel_service'),
     
